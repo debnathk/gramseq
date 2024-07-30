@@ -646,7 +646,7 @@ def process_l1000(smiles_list):
             best_sim = max(similarities.keys())
             sim_smiles = similarities[best_sim]
             
-            # print(f'Best similarity: {best_sim} with SMILES: {sim_smiles}')
+            print(f'Best similarity: {best_sim} with SMILES: {sim_smiles}')
             try:
                 sim_cmap = dict_smiles[sim_smiles]
                 sim_idx = dict_drugs[sim_cmap]
