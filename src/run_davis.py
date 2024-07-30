@@ -7,7 +7,7 @@ import warnings
 import pandas as pd
 import numpy as np
 import utils
-from predictor_gvae_rnaseq_rnn import DLEPS
+from predictor_gvae_rnaseq_cnn import DLEPS
 import tensorflow as tf
 from keras.optimizers import Adam
 from keras.callbacks import EarlyStopping
@@ -25,22 +25,29 @@ print('Drug 1: ' + X_drugs[0])
 print('Target 1: ' + X_targets[0])
 print('Score 1: ' + str(y[0]))
 
+# Initialize the size of subset
+frac = 10
+
 # Convert drugs to series object
-X_drugs_series = pd.Series(X_drugs)
+X_drugs = pd.Series(X_drugs[:frac])
 
 # One-hot encoding of drug SMILES
-S = pd.Series(X_drugs_series.unique()).apply(utils.smiles2onehot)
-S_dict = dict(zip(X_drugs_series.unique(), S))
+S = pd.Series(X_drugs.unique()).apply(utils.smiles2onehot)
+S_dict = dict(zip(X_drugs.unique(), S))
 df_drugs = [S_dict[i] for i in X_drugs]
 one_hot_drugs = np.array(df_drugs)
 print(f'One-hot encoding of drug: {one_hot_drugs.shape}')
 
 # Generate l1000 data for drugs
-vector_genes = utils.process_l1000(X_drugs)
+G = pd.Series(X_drugs.unique()).apply(utils.process_l1000)
+G_dict = dict(zip(X_drugs.unique(), G))
+df_genes = [G_dict[i] for i in X_drugs]
+vector_genes = np.array(df_genes)
+# vector_genes = utils.process_l1000(X_drugs[:10])
 print(f'Vector encoding of gene expressions corresponding to drugs: {vector_genes.shape}')
 
 # Convert proteins to series object
-X_targets = pd.Series(X_targets)
+X_targets = pd.Series(X_targets[:frac])
 
 # One-hot encoding of proteins
 AA = pd.Series(X_targets.unique()).apply(utils.protein2onehot)
@@ -51,21 +58,21 @@ print(f'One-hot encoding of protein: {one_hot_proteins.shape}')
 
 print(f'No of Labels: {y.shape}')
 
-'''
-print("-----------------------Training - GVAE + RNN----------------------------")
+print("-----------------------Training - GVAE + CNN----------------------------")
 
 # Clean data to remove inf, nan, if present any
 drugs = utils.clean_data(one_hot_drugs, fill_value=0)
-# genes = utils.clean_data(genes, fill_value=0)
+genes = utils.clean_data(vector_genes, fill_value=0)
 proteins = utils.clean_data(one_hot_proteins, fill_value=0)
 labels = utils.clean_data(y)
 
 # Split dataset
-drug_train, protein_train, y_train, \
-drug_val, protein_val, y_val, \
-drug_test, protein_test, y_test = utils.train_val_test_split(X1=drugs, X3=proteins, y=labels)
+drug_train, genes_train, protein_train, y_train, \
+drug_val, genes_val, protein_val, y_val, \
+drug_test, genes_test, protein_test, y_test = utils.train_val_test_split(X1=drugs, X2=genes, X3=proteins, y=labels)
 
 print(f'Train, Val, Test shapes - drug: {drug_train.shape, drug_val.shape, drug_test.shape}')
+print(f'Train, Val, Test shapes - genes: {genes_train.shape, genes_val.shape, genes_test.shape}')
 print(f'Train, Val, Test shapes - protein: {protein_train.shape, protein_val.shape, protein_test.shape}')
 print(f'Train, Val, Test shapes - y: {y_train.shape, y_val.shape, y_test.shape}')
 
@@ -89,32 +96,32 @@ def train():
 
     # Use ModelCheckpoint to save model and weights
     from keras.callbacks import ModelCheckpoint
-    filepath = "../model_weights/bs512_davis_rnn_fold5.hdf5"
+    filepath = "../model_weights/bs128_davis_rnaseq_cnn_fold1.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
 
     # train the model
     early_stopping = EarlyStopping(monitor='val_mae', patience=10)
-    history = model.fit([drug_train, protein_train], y_train, batch_size=batch_size, epochs=epochs, callbacks=[checkpoint, early_stopping], validation_data=([drug_val, protein_val], y_val))
+    history = model.fit([drug_train, genes_train, protein_train], y_train, batch_size=batch_size, epochs=epochs, callbacks=[checkpoint, early_stopping], validation_data=([drug_val, genes_val, protein_val], y_val))
 
     # Plot the training and validation loss
     import matplotlib.pyplot as plt
-    plt.title("Loss Curve: Drug Encoding = GVAE, Protein Encoding = RNN")
+    plt.title("Loss Curve: Drug Encoding = GVAE, RNA-Seq Encoding = Dense, Protein Encoding = CNN")
     plt.plot(history.history['loss'], label='Train Loss')
     plt.plot(history.history['val_loss'], label='Validation Loss')
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend()
-    plt.savefig("../results/plots/loss_bs512_davis_rnn_fold5.png")
+    plt.savefig("../results/plots/loss_bs128_davis_rnaseq_cnn_fold1.png")
     plt.close()
 
     # Plot the training and validation MAE
-    plt.title("MAE Curve: Drug Encoding = GVAE, Protein Encoding = RNN")
+    plt.title("MAE Curve: Drug Encoding = GVAE, RNA-Seq Encoding = Dense, Protein Encoding = CNN")
     plt.plot(history.history['mae'], label='Train MAE')
     plt.plot(history.history['val_mae'], label='Validation MAE')
     plt.xlabel('Epoch')
     plt.ylabel('MAE')
     plt.legend()
-    plt.savefig("../results/plots/mae_bs512_davis_rnn_fold5.png")
+    plt.savefig("../results/plots/mae_bs128_davis_rnaseq_cnn_fold1.png")
     plt.close()
 
     print("----END TRAINING----")
@@ -123,12 +130,12 @@ def train():
 
 def test():
     print('----LOAD PRETRAINED MODEL----')
-    model.load_weights("../model_weights/bs512_davis_rnn_fold5.hdf5")
+    model.load_weights("../model_weights/bs128_davis_rnaseq_cnn_fold1.hdf5")
     print('----PRETRAINED MODEL LOADED----')
     print('----START TESTING----')
 
-    y_pred_val = model.predict([drug_val, protein_val])
-    y_pred_test = model.predict([drug_test, protein_test])
+    y_pred_val = model.predict([drug_val, genes_val, protein_val])
+    y_pred_test = model.predict([drug_test, genes_test, protein_test])
 
     # Validation results
     val_mse_loss = utils.mse_loss(y_val, y_pred_val.ravel())
@@ -151,7 +158,7 @@ def test():
 
     # Save the table
     table = table.get_string()
-    with open('/home/debnathk/phd/projects/gramseq/results/bs512/davis/rnaseq_false/gvae_rnn/bs512_davis_rnn_fold5.txt', 'w') as f:
+    with open('/home/debnathk/phd/projects/gramseq/results/bs128/davis/rnaseq_false/gvae_rnaseq_cnn/bs128_davis_rnaseq_cnn_fold1.txt', 'w') as f:
         f.write(table)
 
     # Plot validation results
@@ -193,4 +200,3 @@ if __name__ == "__main__":
     # Run
     main('train')
     main('test')
-'''
