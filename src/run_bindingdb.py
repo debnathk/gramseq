@@ -26,30 +26,34 @@ print('Target 1: ' + X_targets[0])
 print('Score 1: ' + str(y[0]))
 
 # Convert drugs to series object
-X_drugs_series = pd.Series(X_drugs)
+X_drugs = pd.Series(X_drugs[:20])
 
 # One-hot encoding of drug SMILES
-S = pd.Series(X_drugs_series.unique()).apply(utils.smiles2onehot)
-S_dict = dict(zip(X_drugs_series.unique(), S))
-df_drugs = [S_dict[i] for i in X_drugs_series]
-one_hot_drugs = np.array(df_drugs)
-print(f'One-hot encoding of drug: {one_hot_drugs.shape}')
+# S = pd.Series(X_drugs_series.unique()).apply(utils.smiles2onehot)
+# S_dict = dict(zip(X_drugs_series.unique(), S))
+# df_drugs = [S_dict[i] for i in X_drugs_series]
+# one_hot_drugs = np.array(df_drugs)
+# print(f'One-hot encoding of drug: {one_hot_drugs.shape}')
 
 # Generate l1000 data for drugs
-vector_genes = utils.process_l1000(X_drugs)
+G = pd.Series(X_drugs.unique()).apply(utils.process_l1000)
+G_dict = dict(zip(X_drugs.unique(), G))
+df_genes = [G_dict[i] for i in X_drugs]
+vector_genes = np.array(df_genes)
+# vector_genes = utils.process_l1000(X_drugs[:10])
 print(f'Vector encoding of gene expressions corresponding to drugs: {vector_genes.shape}')
 
 # Convert proteins to series object
-X_targets = pd.Series(X_targets)
+# X_targets = pd.Series(X_targets)
 
 # One-hot encoding of proteins
-AA = pd.Series(X_targets.unique()).apply(utils.protein2onehot)
-AA_dict = dict(zip(X_targets.unique(), AA))
-df_proteins = [AA_dict[i] for i in X_targets]
-one_hot_proteins = np.array(df_proteins)
-print(f'One-hot encoding of protein: {one_hot_proteins.shape}')
+# AA = pd.Series(X_targets.unique()).apply(utils.protein2onehot)
+# AA_dict = dict(zip(X_targets.unique(), AA))
+# df_proteins = [AA_dict[i] for i in X_targets]
+# one_hot_proteins = np.array(df_proteins)
+# print(f'One-hot encoding of protein: {one_hot_proteins.shape}')
 
-print(f'No of Labels: {y.shape}')
+# print(f'No of Labels: {y.shape}')
 
 '''
 print("-----------------------Training - GVAE + CNN----------------------------")

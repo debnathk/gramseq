@@ -512,7 +512,7 @@ def c_index(y_true, y_pred):
     
     return c_index
 
-def process_l1000(smiles_list):
+def process_l1000(smiles):
     # Load l1000 dataset
     df_l1000 = pd.read_csv('/home/debnathk/phd/projects/gramseq/data/l1000_cp_10uM_all.csv')
     # print(df_l1000.head())
@@ -623,38 +623,37 @@ def process_l1000(smiles_list):
 
     # smiles_list = ['CCNC(=O)CCC(N)C(O)=O', 'NC(CCCNC(N)=O)C(O)=O', 'CCCN(CCC)C1CCc2ccc(O)cc2C1', 'C#Cc1cccc(Nc2ncnc3cc(OCCOC)c(OCCOC)cc23)c1']
 
-    collected_data = []
+    # collected_data = []
 
-    for smiles in smiles_list:
-        try:
-            cmap = dict_smiles[smiles]
-            idx = dict_drugs[cmap]
-            collected_data.append(data[idx])
-        except:
-            print(f'SMILES {smiles} not present in L1000 dataset. Performing similarity analysis with present SMILES...')
-            
-            mol = Chem.MolFromSmiles(smiles)
-            fpgen = AllChem.GetRDKitFPGenerator()
-            query_fp = fpgen.GetFingerprint(mol)
-            similarities = {}
-            for l1000_smiles in dict_smiles.keys():
-                mol_p = Chem.MolFromSmiles(l1000_smiles)
-                l1000_fp = fpgen.GetFingerprint(mol_p)
-                similarity = DataStructs.TanimotoSimilarity(query_fp, l1000_fp)
-                similarities[similarity] = l1000_smiles
-            
-            best_sim = max(similarities.keys())
-            sim_smiles = similarities[best_sim]
-            
-            print(f'Best similarity: {best_sim} with SMILES: {sim_smiles}')
-            try:
-                sim_cmap = dict_smiles[sim_smiles]
-                sim_idx = dict_drugs[sim_cmap]
-                sim_data = data[sim_idx] * best_sim
-            except:
-                print(f'Invalid CMAP: {sim_cmap}')
-            
-            collected_data.append(sim_data)
+    try:
+        cmap = dict_smiles[smiles]
+        idx = dict_drugs[cmap]
+        # collected_data.append(data[idx])
+    except KeyError as e:
+        print(f'SMILES {smiles} not present in L1000 dataset. Performing similarity analysis with present SMILES...')
+        
+        # mol = Chem.MolFromSmiles(smiles)
+        # fpgen = AllChem.GetRDKitFPGenerator()
+        # query_fp = fpgen.GetFingerprint(mol)
+        # similarities = {}
+        # for l1000_smiles in list(dict_smiles.keys()):
+        #     mol_p = Chem.MolFromSmiles(l1000_smiles)
+        #     l1000_fp = fpgen.GetFingerprint(mol_p)
+        #     similarity = DataStructs.TanimotoSimilarity(query_fp, l1000_fp)
+        #     similarities[similarity] = l1000_smiles
+        
+        # best_sim = max(similarities.keys())
+        # sim_smiles = similarities[best_sim]
+        
+        # print(f'Best similarity: {best_sim} with SMILES: {sim_smiles}')
+        # try:
+        #     sim_cmap = dict_smiles[sim_smiles]
+        #     sim_idx = dict_drugs[sim_cmap]
+        #     sim_data = data[sim_idx] * best_sim
+        # except:
+        #     print(f'Invalid CMAP: {sim_cmap}')
+        
+        # collected_data.append(sim_data)
 
-    stacked_data = np.stack(collected_data)
-    return stacked_data
+    # stacked_data = np.stack(collected_data)
+    return data[idx]
