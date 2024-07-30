@@ -13,9 +13,3 @@ Others pip installations
 ```
 pip install rdkit nltk pandas numpy==1.26.4 scikit-learn matplotlib prettytable ipykernel
 ```
-## Create data
-Create BindingDB and l1000 data:
-```
-create_data.py --data bindingdb
-create_data.py --data l1000
-```
