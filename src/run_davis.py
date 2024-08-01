@@ -7,7 +7,7 @@ import warnings
 import pandas as pd
 import numpy as np
 import utils
-from predictor_gvae_rnaseq_cnn import DLEPS
+from predictor_gvae_rnaseq_rnn import DLEPS
 import tensorflow as tf
 from keras.optimizers import Adam
 from keras.callbacks import EarlyStopping
@@ -26,7 +26,7 @@ print('Target 1: ' + X_targets[0])
 print('Score 1: ' + str(y[0]))
 
 # Initialize the size of subset
-frac = 10
+frac = len(y)
 
 # Convert drugs to series object
 X_drugs = pd.Series(X_drugs[:frac])
@@ -56,9 +56,10 @@ df_proteins = [AA_dict[i] for i in X_targets]
 one_hot_proteins = np.array(df_proteins)
 print(f'One-hot encoding of protein: {one_hot_proteins.shape}')
 
+y = y[:frac]
 print(f'No of Labels: {y.shape}')
 
-print("-----------------------Training - GVAE + CNN----------------------------")
+print("-----------------------Training - GVAE + RNA-Seq + RNN----------------------------")
 
 # Clean data to remove inf, nan, if present any
 drugs = utils.clean_data(one_hot_drugs, fill_value=0)
@@ -96,7 +97,7 @@ def train():
 
     # Use ModelCheckpoint to save model and weights
     from keras.callbacks import ModelCheckpoint
-    filepath = "../model_weights/bs128_davis_rnaseq_cnn_fold1.hdf5"
+    filepath = "../model_weights/bs128_davis_rnaseq_rnn_fold1.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
 
     # train the model
@@ -105,23 +106,23 @@ def train():
 
     # Plot the training and validation loss
     import matplotlib.pyplot as plt
-    plt.title("Loss Curve: Drug Encoding = GVAE, RNA-Seq Encoding = Dense, Protein Encoding = CNN")
+    plt.title("Loss Curve: Drug Encoding = GVAE, RNA-Seq Encoding = Dense, Protein Encoding = RNN")
     plt.plot(history.history['loss'], label='Train Loss')
     plt.plot(history.history['val_loss'], label='Validation Loss')
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend()
-    plt.savefig("../results/plots/loss_bs128_davis_rnaseq_cnn_fold1.png")
+    plt.savefig("../results/plots/loss_bs128_davis_rnaseq_rnn_fold1.png")
     plt.close()
 
     # Plot the training and validation MAE
-    plt.title("MAE Curve: Drug Encoding = GVAE, RNA-Seq Encoding = Dense, Protein Encoding = CNN")
+    plt.title("MAE Curve: Drug Encoding = GVAE, RNA-Seq Encoding = Dense, Protein Encoding = RNN")
     plt.plot(history.history['mae'], label='Train MAE')
     plt.plot(history.history['val_mae'], label='Validation MAE')
     plt.xlabel('Epoch')
     plt.ylabel('MAE')
     plt.legend()
-    plt.savefig("../results/plots/mae_bs128_davis_rnaseq_cnn_fold1.png")
+    plt.savefig("../results/plots/mae_bs128_davis_rnaseq_rnn_fold1.png")
     plt.close()
 
     print("----END TRAINING----")
@@ -130,7 +131,7 @@ def train():
 
 def test():
     print('----LOAD PRETRAINED MODEL----')
-    model.load_weights("../model_weights/bs128_davis_rnaseq_cnn_fold1.hdf5")
+    model.load_weights("../model_weights/bs128_davis_rnaseq_rnn_fold1.hdf5")
     print('----PRETRAINED MODEL LOADED----')
     print('----START TESTING----')
 
@@ -158,7 +159,7 @@ def test():
 
     # Save the table
     table = table.get_string()
-    with open('/home/debnathk/phd/projects/gramseq/results/bs128/davis/rnaseq_false/gvae_rnaseq_cnn/bs128_davis_rnaseq_cnn_fold1.txt', 'w') as f:
+    with open('/home/debnathk/phd/projects/gramseq/results/bs128/davis/rnaseq_true/gvae_rnn/bs128_davis_rnaseq_rnn_fold1.txt', 'w') as f:
         f.write(table)
 
     # Plot validation results
