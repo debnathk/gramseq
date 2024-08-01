@@ -92,17 +92,17 @@ def train():
     model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=['mae']) 
 
     # Hyperparameters
-    epochs = 100
-    batch_size = 128
+    epochs = 500
+    batch_size = 256
 
     # Use ModelCheckpoint to save model and weights
     from keras.callbacks import ModelCheckpoint
-    filepath = "../model_weights/bs128_davis_rnaseq_rnn_fold1.hdf5"
+    filepath = "../model_weights/bs256_davis_rnaseq_rnn_fold1.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
 
     # train the model
-    early_stopping = EarlyStopping(monitor='val_mae', patience=10)
-    history = model.fit([drug_train, genes_train, protein_train], y_train, batch_size=batch_size, epochs=epochs, callbacks=[checkpoint, early_stopping], validation_data=([drug_val, genes_val, protein_val], y_val))
+    # early_stopping = EarlyStopping(monitor='val_mae', patience=10)
+    history = model.fit([drug_train, genes_train, protein_train], y_train, batch_size=batch_size, epochs=epochs, callbacks=[checkpoint], validation_data=([drug_val, genes_val, protein_val], y_val))
 
     # Plot the training and validation loss
     import matplotlib.pyplot as plt
@@ -112,7 +112,7 @@ def train():
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend()
-    plt.savefig("../results/plots/loss_bs128_davis_rnaseq_rnn_fold1.png")
+    plt.savefig("../results/plots/loss_bs256_davis_rnaseq_rnn_fold1.png")
     plt.close()
 
     # Plot the training and validation MAE
@@ -122,7 +122,7 @@ def train():
     plt.xlabel('Epoch')
     plt.ylabel('MAE')
     plt.legend()
-    plt.savefig("../results/plots/mae_bs128_davis_rnaseq_rnn_fold1.png")
+    plt.savefig("../results/plots/mae_bs256_davis_rnaseq_rnn_fold1.png")
     plt.close()
 
     print("----END TRAINING----")
@@ -131,7 +131,7 @@ def train():
 
 def test():
     print('----LOAD PRETRAINED MODEL----')
-    model.load_weights("../model_weights/bs128_davis_rnaseq_rnn_fold1.hdf5")
+    model.load_weights("../model_weights/bs256_davis_rnaseq_rnn_fold1.hdf5")
     print('----PRETRAINED MODEL LOADED----')
     print('----START TESTING----')
 
@@ -159,7 +159,7 @@ def test():
 
     # Save the table
     table = table.get_string()
-    with open('/home/debnathk/phd/projects/gramseq/results/bs128/davis/rnaseq_true/gvae_rnn/bs128_davis_rnaseq_rnn_fold1.txt', 'w') as f:
+    with open('/home/debnathk/phd/projects/gramseq/results/bs256/davis/rnaseq_true/gvae_rnn/bs256_davis_rnaseq_rnn_fold1.txt', 'w') as f:
         f.write(table)
 
     # Plot validation results
