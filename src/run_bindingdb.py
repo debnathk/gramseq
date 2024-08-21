@@ -7,7 +7,7 @@ import warnings
 import pandas as pd
 import numpy as np
 import utils
-from predictor_gvae_rnaseq_cnn import DLEPS
+from predictor_gvae_rnaseq_rnn import DLEPS
 import tensorflow as tf
 from keras.optimizers import Adam
 from keras.callbacks import EarlyStopping
@@ -35,13 +35,13 @@ df_drugs = [S_dict[i] for i in X_drugs]
 one_hot_drugs = np.array(df_drugs)
 print(f'One-hot encoding of drug: {one_hot_drugs.shape}')
 
-# Generate l1000 data for drugs
-G = pd.Series(X_drugs.unique()).apply(utils.process_l1000)
-G_dict = dict(zip(X_drugs.unique(), G))
-df_genes = [G_dict[i] for i in X_drugs]
-vector_genes = np.array(df_genes)
-# vector_genes = utils.process_l1000(X_drugs[:10])
-print(f'Vector encoding of gene expressions corresponding to drugs: {vector_genes.shape}')
+# # Generate l1000 data for drugs
+# G = pd.Series(X_drugs.unique()).apply(utils.process_l1000)
+# G_dict = dict(zip(X_drugs.unique(), G))
+# df_genes = [G_dict[i] for i in X_drugs]
+# vector_genes = np.array(df_genes)
+# # vector_genes = utils.process_l1000(X_drugs[:10])
+# print(f'Vector encoding of gene expressions corresponding to drugs: {vector_genes.shape}')
 
 # Convert proteins to series object
 X_targets = pd.Series(X_targets)
@@ -55,8 +55,7 @@ print(f'One-hot encoding of protein: {one_hot_proteins.shape}')
 
 print(f'No of Labels: {y.shape}')
 
-'''
-print("-----------------------Training - GVAE + CNN----------------------------")
+print("-----------------------Training - GVAE + RNN----------------------------")
 
 # Clean data to remove inf, nan, if present any
 drugs = utils.clean_data(one_hot_drugs, fill_value=0)
@@ -89,11 +88,11 @@ def train():
 
     # Hyperparameters
     epochs = 100
-    batch_size = 128
+    batch_size = 512
 
     # Use ModelCheckpoint to save model and weights
     from keras.callbacks import ModelCheckpoint
-    filepath = "../model_weights/bs128_bindingdb_cnn_fold5.hdf5"
+    filepath = "../model_weights/bs512_bindingdb_rnn_fold5.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
 
     # train the model
@@ -102,23 +101,23 @@ def train():
 
     # Plot the training and validation loss
     import matplotlib.pyplot as plt
-    plt.title("Loss Curve: Drug Encoding = GVAE, Protein Encoding = CNN")
+    plt.title("Loss Curve: Drug Encoding = GVAE, Protein Encoding = RNN")
     plt.plot(history.history['loss'], label='Train Loss')
     plt.plot(history.history['val_loss'], label='Validation Loss')
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend()
-    plt.savefig("../results/plots/loss_bs128_bindingdb_cnn_fold5.png")
+    plt.savefig("../results/plots/loss_bs512_bindingdb_rnn_fold5.png")
     plt.close()
 
     # Plot the training and validation MAE
-    plt.title("MAE Curve: Drug Encoding = GVAE, Protein Encoding = CNN")
+    plt.title("MAE Curve: Drug Encoding = GVAE, Protein Encoding = RNN")
     plt.plot(history.history['mae'], label='Train MAE')
     plt.plot(history.history['val_mae'], label='Validation MAE')
     plt.xlabel('Epoch')
     plt.ylabel('MAE')
     plt.legend()
-    plt.savefig("../results/plots/mae_bs128_bindingdb_cnn_fold5.png")
+    plt.savefig("../results/plots/mae_bs512_bindingdb_rnn_fold5.png")
     plt.close()
 
     print("----END TRAINING----")
@@ -127,7 +126,7 @@ def train():
 
 def test():
     print('----LOAD PRETRAINED MODEL----')
-    model.load_weights("../model_weights/bs128_bindingdb_cnn_fold5.hdf5")
+    model.load_weights("../model_weights/bs512_bindingdb_rnn_fold5.hdf5")
     print('----PRETRAINED MODEL LOADED----')
     print('----START TESTING----')
 
@@ -155,7 +154,7 @@ def test():
 
     # Save the table
     table = table.get_string()
-    with open('/home/debnathk/phd/projects/gramseq/results/bs128/bindingdb/rnaseq_false/gvae_cnn/bs128_bindingdb_cnn_fold5.txt', 'w') as f:
+    with open('/home/debnathk/phd/projects/gramseq/results/bs512/bindingdb/rnaseq_false/gvae_rnn/bs512_bindingdb_rnn_fold5.txt', 'w') as f:
         f.write(table)
 
     # Plot validation results
@@ -199,11 +198,10 @@ if __name__ == "__main__":
     main('test')
 
     # Remove log files
-    PATH = '/home/debnathk/phd/projects/gramseq/results/bs128/bindingdb/rnaseq_false/gvae_cnn/'
-    output_path = 'output_bs128_bindingdb_cnn_fold5.log'
+    PATH = '/home/debnathk/phd/projects/gramseq/results/bs512/bindingdb/rnaseq_false/gvae_rnn/'
+    output_path = 'output_bs512_bindingdb_rnn_fold5.log'
     if os.path.exists(PATH + output_path):
         os.remove(PATH + output_path)
-    error_path = 'error_bs128_bindingdb_cnn_fold5.log'
+    error_path = 'error_bs512_bindingdb_rnn_fold5.log'
     if os.path.exists(PATH + error_path):
         os.remove(PATH + error_path)
-'''

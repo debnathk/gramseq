@@ -22,4 +22,5 @@ model_weights
 others
 figures
 results
+*checkpoints
 *events.out.tfevents*

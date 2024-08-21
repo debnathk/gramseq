@@ -71,7 +71,7 @@ class DLEPS(object):
         #     self.reverse = False
         #     print('DLEPS: No input of down files\n')
 
-    def _build_model(self, rnaseq=True):
+    def _build_model(self, rnaseq=False):
         
         # gVAE network - for drugs
         grammar_weights = '../data/vae.hdf5'

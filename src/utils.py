@@ -512,7 +512,7 @@ def c_index(y_true, y_pred):
     
     return c_index
 
-def process_l1000(smiles):
+def process_l1000(s):
     # Load l1000 dataset
     df_l1000 = pd.read_csv('/home/debnathk/phd/projects/gramseq/data/l1000_cp_10uM_all.csv')
     # print(df_l1000.head())
@@ -604,7 +604,9 @@ def process_l1000(smiles):
 
     for smiles, cmap in zip(df_comp_info['canonical_smiles'], df_comp_info['cmap_name']):
         if cmap not in dict_smiles.values():
-            dict_smiles[smiles] = cmap
+            dict_smiles[standardize_smiles(smiles)] = cmap
+
+    print(dict_smiles)
 
     # with open('../data/l1000_smiles.txt', 'w') as f:
     #     json.dump(dict_smiles, f)
@@ -626,13 +628,14 @@ def process_l1000(smiles):
     # collected_data = []
 
     try:
-        cmap = dict_smiles[smiles]
-        idx = dict_drugs[cmap]
-        # collected_data.append(data[idx])
-    except KeyError as e:
-        print(f'SMILES {smiles} not present in L1000 dataset. Performing similarity analysis with present SMILES...')
+        cmap_s = dict_smiles[s]
+        idx_s = dict_drugs[cmap_s]
+        result = data[idx_s]
+    except KeyError:
+        print(f'SMILES {smiles} not present in L1000 dataset.')
         
-        # mol = Chem.MolFromSmiles(smiles)
+        # mol = Chem.MolFromSmiles(s)
+        # result = data[0]
         # fpgen = AllChem.GetRDKitFPGenerator()
         # query_fp = fpgen.GetFingerprint(mol)
         # similarities = {}
@@ -650,10 +653,12 @@ def process_l1000(smiles):
         #     sim_cmap = dict_smiles[sim_smiles]
         #     sim_idx = dict_drugs[sim_cmap]
         #     sim_data = data[sim_idx] * best_sim
-        # except:
+        #     idx_s = sim_idx
+        # except KeyError:
         #     print(f'Invalid CMAP: {sim_cmap}')
-        
-        # collected_data.append(sim_data)
+        #     return None
 
-    # stacked_data = np.stack(collected_data)
-    return data[idx]
+    # else:
+    #     sim_data = data[idx_s]
+        
+    return result

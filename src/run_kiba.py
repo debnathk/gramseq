@@ -80,11 +80,11 @@ def train():
 
     # Hyperparameters
     epochs = 100
-    batch_size = 128
+    batch_size = 512
 
     # Use ModelCheckpoint to save model and weights
     from keras.callbacks import ModelCheckpoint
-    filepath = "../model_weights/bs128_kiba_cnn_fold1.hdf5"
+    filepath = "../model_weights/bs512_kiba_cnn_fold2.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
 
     # train the model
@@ -99,7 +99,7 @@ def train():
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend()
-    plt.savefig("../results/plots/loss_bs128_kiba_cnn_fold1.png")
+    plt.savefig("../results/plots/loss_bs512_kiba_cnn_fold2.png")
     plt.close()
 
     # Plot the training and validation MAE
@@ -109,7 +109,7 @@ def train():
     plt.xlabel('Epoch')
     plt.ylabel('MAE')
     plt.legend()
-    plt.savefig("../results/plots/mae_bs128_kiba_cnn_fold1.png")
+    plt.savefig("../results/plots/mae_bs512_kiba_cnn_fold2.png")
     plt.close()
 
     print("----END TRAINING----")
@@ -118,7 +118,7 @@ def train():
 
 def test():
     print('----LOAD PRETRAINED MODEL----')
-    model.load_weights("../model_weights/bs128_kiba_cnn_fold1.hdf5")
+    model.load_weights("../model_weights/bs512_kiba_cnn_fold2.hdf5")
     print('----PRETRAINED MODEL LOADED----')
     print('----START TESTING----')
 
@@ -146,7 +146,7 @@ def test():
 
     # Save the table
     table = table.get_string()
-    with open('/home/debnathk/phd/projects/gramseq/results/bs128/kiba/rnaseq_false/gvae_cnn/bs128_kiba_cnn_fold1.txt', 'w') as f:
+    with open('/home/debnathk/phd/projects/gramseq/results/bs512/kiba/rnaseq_false/gvae_cnn/bs512_kiba_cnn_fold2.txt', 'w') as f:
         f.write(table)
 
     # Plot validation results
@@ -190,10 +190,10 @@ if __name__ == "__main__":
     main('test')
     
     # Remove log files
-    PATH = '/home/debnathk/phd/projects/gramseq/results/bs128/kiba/rnaseq_false/gvae_cnn/'
-    output_path = 'output_bs128_kiba_cnn_fold1.log'
+    PATH = '/home/debnathk/phd/projects/gramseq/results/bs512/kiba/rnaseq_false/gvae_cnn/'
+    output_path = 'output_bs512_kiba_cnn_fold2.log'
     if os.path.exists(PATH + output_path):
         os.remove(PATH + output_path)
-    error_path = 'error_bs128_kiba_cnn_fold1.log'
+    error_path = 'error_bs512_kiba_cnn_fold2.log'
     if os.path.exists(PATH + error_path):
         os.remove(PATH + error_path)

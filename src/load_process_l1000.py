@@ -1,13 +1,14 @@
-from utils import process_l1000
-'''
+import utils
+from DeepPurpose import dataset
 import pandas as pd
 import numpy as np
+'''
 import utils
 import json
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem
 
-def process_l100(smiles_list):
+def process_l100(smiles):
     # Load l1000 dataset
     df_l1000 = pd.read_csv('/home/debnathk/phd/projects/gramseq/data/l1000_cp_10uM_all.csv')
     # print(df_l1000.head())
@@ -156,9 +157,30 @@ def process_l100(smiles_list):
     stacked_data = np.stack(collected_data)
     return stacked_data
 '''
-
+    
 if __name__ == "__main__":
-    smiles_list = ['CCNC(=O)CCC(N)C(O)=O', 'NC(CCCNC(N)=O)C(O)=O', 'CCCN(CCC)C1CCc2ccc(O)cc2C1', 'C#Cc1cccc(Nc2ncnc3cc(OCCOC)c(OCCOC)cc23)c1']
-    print(process_l1000(smiles_list))
+    # Preprocess Davis dataset
+    X_drugs, X_targets, y = dataset.load_process_DAVIS()
+    print('Drug 1: ' + X_drugs[0])
+    print('Target 1: ' + X_targets[0])
+    print('Score 1: ' + str(y[0]))
+
+    # Initialize the size of subset
+    frac = 100
+
+    # Convert drugs to series object
+    X_drugs = pd.Series(X_drugs[:frac])
+
+    # Generate l1000 data for drugs
+    G = pd.Series(X_drugs.unique()).apply(utils.standardize_smiles).apply(utils.process_l1000)
+    G_dict = dict(zip(X_drugs.unique(), G))
+    df_genes = [G_dict[i] for i in X_drugs]
+    vector_genes = np.array(df_genes)
+    # Save the results in a file
+    with open('/home/debnathk/phd/projects/gramseq/src/vector_genes.txt', 'w') as file:
+        file.write(str(vector_genes))
+    # vector_genes = utils.process_l1000(X_drugs[:10])
+    print(vector_genes)
+    print(f'Vector encoding of gene expressions corresponding to drugs: {vector_genes.shape}')
 
 
