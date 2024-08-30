@@ -1,4 +1,3 @@
-
 import numpy as np
 from rdkit.Chem import MolToSmiles, MolFromSmiles
 from rdkit import Chem, DataStructs
