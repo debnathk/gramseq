@@ -20,5 +20,5 @@ __pycache__
 model_weights
 others
 figures
-results
+result_logs
 *events.out.tfevents*

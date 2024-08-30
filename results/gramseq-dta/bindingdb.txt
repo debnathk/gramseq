@@ -1,0 +1,82 @@
+Dataset summary: BindingDB dataset
+    No of drugs - 
+    No of targets - 
+    Total interactions -                                            18,815
+Model summary:
+    Drug encoder -                                                  Grammar Variational Autoencoder (GVAE)
+    RNA-Seq encoder -                                               Dense
+    Target encoder -                                                Convolutional Neural Network (CNN)
+Test results:
+    MSE Loss -                                                      0.699
+    Pearson Correlation -                                           0.857
+    Concordance Index -                                             0.846
+
+Dataset summary: BindingDB dataset
+    No of drugs - 
+    No of targets - 
+    Total interactions -                                            18,815
+Model summary:
+    Drug encoder -                                                  Grammar Variational Autoencoder (GVAE)
+    RNA-Seq encoder -                                               Dense
+    Target encoder -                                                Recurrent Neural Network (RNN)
+Test results:
+    MSE Loss -                                                      0.704
+    Pearson Correlation -                                           0.861
+    Concordance Index -                                             0.848
+
+#####################################################################################################################
+
+Dataset summary: Davis dataset
+    No of drugs - 
+    No of targets - 
+    Total interactions -                                            
+Model summary:
+    Drug encoder -                                                  Grammar Variational Autoencoder (GVAE)
+    RNA-Seq encoder -                                               Dense
+    Target encoder -                                                Convolutional Neural Network (CNN)
+Test results:
+    MSE Loss -                                                      
+    Pearson Correlation -                                           
+    Concordance Index -                                             
+
+Dataset summary: Davis dataset
+    No of drugs - 
+    No of targets - 
+    Total interactions -                                            
+Model summary:
+    Drug encoder -                                                  Grammar Variational Autoencoder (GVAE)
+    RNA-Seq encoder -                                               Dense
+    Target encoder -                                                Recurrent Neural Network (RNN)
+Test results:
+    MSE Loss -                                                      
+    Pearson Correlation -                                           
+    Concordance Index -                                             
+
+#####################################################################################################################
+
+Dataset summary: KIBA dataset
+    No of drugs - 
+    No of targets - 
+    Total interactions -                                            
+Model summary:
+    Drug encoder -                                                  Grammar Variational Autoencoder (GVAE)
+    RNA-Seq encoder -                                               Dense
+    Target encoder -                                                Convolutional Neural Network (CNN)
+Test results:
+    MSE Loss -                                                      
+    Pearson Correlation -                                           
+    Concordance Index -                                             
+
+Dataset summary: KIBA dataset
+    No of drugs - 
+    No of targets - 
+    Total interactions -                                            
+Model summary:
+    Drug encoder -                                                  Grammar Variational Autoencoder (GVAE)
+    RNA-Seq encoder -                                               Dense
+    Target encoder -                                                Recurrent Neural Network (RNN)
+Test results:
+    MSE Loss -                                                      
+    Pearson Correlation -                                           
+    Concordance Index -                                             
+
