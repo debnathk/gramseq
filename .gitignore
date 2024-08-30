@@ -10,7 +10,6 @@ __pycache__
 *.csv
 *.tsv
 *.hdf5
-result
 *.joblib
 *.Rproj
 *.pkl
