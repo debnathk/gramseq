@@ -26,7 +26,7 @@ print('Target 1: ' + X_targets[0])
 print('Score 1: ' + str(y[0]))
 
 # Convert drugs to series object
-X_drugs = pd.Series(X_drugs)
+# X_drugs = pd.Series(X_drugs)
 
 # One-hot encoding of drug SMILES
 S = pd.Series(X_drugs.unique()).apply(utils.smiles2onehot)
