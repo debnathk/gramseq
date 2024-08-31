@@ -514,7 +514,8 @@ def c_index(y_true, y_pred):
 
 def process_l1000(s):
     # Load l1000 dataset
-    df_l1000 = pd.read_csv('/home/debnathk/phd/projects/gramseq/data/l1000_cp_10uM_all.csv')
+    fpath = '../data/'
+    df_l1000 = pd.read_csv(fpath + 'l1000_cp_10uM_all.csv')
     # print(df_l1000.head())
     # print(df_l1000.shape)
 
@@ -546,7 +547,7 @@ def process_l1000(s):
     # Create dataset
 
     # Read the landmark_genes CSV file
-    landmark_genes = pd.read_csv("../data/landmark_genes.csv", header=None)
+    landmark_genes = pd.read_csv(fpath + "landmark_genes.csv", header=None)
 
     # Prepare a list to store the results
     data_reg_list = []
