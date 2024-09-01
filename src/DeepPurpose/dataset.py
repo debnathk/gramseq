@@ -258,7 +258,7 @@ def process_BindingDB(path = None, df = None, y = 'Kd', binary = False, \
 		# keep rows for which at least one of the columns in the idx_str list is not null
 		df_want = df.dropna(thresh=1, subset=idx_str) 
 		
-	df_want = df_want[['BindingDB Reactant_set_id', 'Ligand InChI', 'Ligand SMILES', 'BindingDB Ligand Name',\
+	df_want = df_want[['BindingDB Reactant_set_id', 'Ligand InChI', 'Ligand SMILES','BindingDB Ligand Name',\
 					'PubChem CID', 'UniProt (SwissProt) Primary ID of Target Chain',\
 					'BindingDB Target Chain Sequence'] + idx_str]
 	
@@ -316,8 +316,7 @@ def process_BindingDB(path = None, df = None, y = 'Kd', binary = False, \
 		
 	# if return_ids:
 	# 	return df_want.SMILES.values, df_want['Target Sequence'].values, np.array(y), df_want['PubChem_ID'].values, df_want['UniProt_ID'].values
-	# return df_want.SMILES.values, df_want['Target Sequence'].values, np.array(y)
-	return df_want
+	return df_want.Name.values, df_want.SMILES.values, df_want['Target Sequence'].values, np.array(y)
 
 
 def load_process_DAVIS(path = './data', binary = False, convert_to_log = True, threshold = 30):
