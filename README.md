@@ -13,3 +13,11 @@ Others pip installations
 ```
 pip install rdkit nltk pandas numpy==1.26.4 scikit-learn matplotlib prettytable ipykernel
 ```
+
+## Dataset summary: 
+### BindingDB dataset (Preprocessed)
+No of unique drugs:
+No of unique targets:
+No of total interactions:
+
+
