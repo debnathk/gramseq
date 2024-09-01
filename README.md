@@ -17,9 +17,9 @@ pip install rdkit nltk pandas numpy==1.26.4 scikit-learn matplotlib prettytable 
 ## Dataset summary: 
 ### BindingDB dataset (Preprocessed)
 ```
-No of unique drugs:
-No of unique targets:
-No of total interactions:
+No of unique drugs: 22381
+No of unique targets: 1860
+No of total interactions: 91751
 ```
 
 
