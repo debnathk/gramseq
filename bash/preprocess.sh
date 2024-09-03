@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --job-name=preprocess_BindingDB
-#SBATCH --output output_preprocess_BindingDB.log
-#SBATCH --error error_preprocess_BindingDB.log
+#SBATCH --job-name=preprocess
+#SBATCH --output output_preprocess1.log
+#SBATCH --error error_preprocess1.log
 #SBATCH --partition cpu
-#SBATCH --mem=32G      
+#SBATCH --mem=128G      
 
 
 echo "Date"
@@ -28,7 +28,7 @@ source activate /lustre/home/debnathk/anaconda3/envs/gramseq
 # cd /path/to/your/python/script
 
 # Run your Python script
-python src/preprocess_BindingDB.py
+python src/preprocess.py
 
 end_time=$(date +%s)
 elapsed_time=$((end_time - start_time))
