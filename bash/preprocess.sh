@@ -1,9 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=preprocess
-#SBATCH --output output_preproces.log
-#SBATCH --error error_preprocess.log
+#SBATCH --output output_preprocess1.log
+#SBATCH --error error_preprocess1.log
 #SBATCH --partition cpu
-#SBATCH --mem=32G      
+#SBATCH --mem=128G      
+
 
 echo "Date"
 date
