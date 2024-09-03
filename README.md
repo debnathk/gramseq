@@ -13,3 +13,19 @@ Others pip installations
 ```
 pip install rdkit nltk pandas numpy==1.26.4 scikit-learn matplotlib prettytable ipykernel
 ```
+
+## Dataset summary: 
+### L1000 RNA-Seq dataset
+```
+No of unique perturbagens in L1000 dataset: 33587
+No of instances in L1000 Chemical Perturbation RNA-Seq dataset with 10 uM concentration: 440842
+```
+
+### BindingDB dataset (Preprocessed)
+```
+No of unique drugs: 22381
+No of unique targets: 1860
+No of total interactions: 91751
+```
+
+
