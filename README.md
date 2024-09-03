@@ -15,6 +15,11 @@ pip install rdkit nltk pandas numpy==1.26.4 scikit-learn matplotlib prettytable 
 ```
 
 ## Dataset summary: 
+### L1000 RNA-Seq dataset
+```
+No of instances in L1000 RNA-Seq dataset: 1436110
+```
+
 ### BindingDB dataset (Preprocessed)
 ```
 No of unique drugs: 22381
