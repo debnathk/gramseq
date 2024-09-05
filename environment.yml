@@ -1,0 +1,20 @@
+name: gramseq
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9  # You can specify the Python version you need
+  - cudatoolkit=11.2
+  - cudnn=8.1.0
+  - pip
+  - pip:
+      - tensorflow<2.11  # Install TensorFlow via pip since the conda version may not match GPU support
+      - DeepPurpose
+      - descriptastorus @ git+https://github.com/bp-kelley/descriptastorus@9b133e2c91bb6a67df53db4cba992776db219ab7
+      - rdkit
+      - nltk
+      - pandas
+      - numpy=1.26.4
+      - scikit-learn
+      - matplotlib
+      - prettytable
+      - ipykernel
