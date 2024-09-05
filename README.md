@@ -9,11 +9,11 @@ pip install "tensorflow<2.11"
 python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
 ```
 
-Others pip installations
+Others pip installations (using the `requirements.txt` file)
 ```
-pip install rdkit nltk pandas numpy==1.26.4 scikit-learn matplotlib prettytable ipykernel
+pip install -r requirements.txt
 ```
-However, the environment can be saemlessly setup using the `environment.yml` file
+The environment can also be setup using the `environment.yml` file
 ```
 conda env create -f environment.yml
 conda activate gramseq
