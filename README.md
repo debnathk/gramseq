@@ -13,6 +13,11 @@ Others pip installations
 ```
 pip install rdkit nltk pandas numpy==1.26.4 scikit-learn matplotlib prettytable ipykernel
 ```
+However, the environment can be saemlessly setup using the `environment.yml` file
+```
+conda env create -f environment.yml
+conda activate gramseq
+```
 
 ## Dataset summary: 
 ### L1000 RNA-Seq dataset
