@@ -20,4 +20,5 @@ model_weights
 others
 figures
 result_logs
+results
 *events.out.tfevents*
