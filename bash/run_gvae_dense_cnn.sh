@@ -9,8 +9,8 @@ fi
 PROT_ENCODING='cnn'
 
 MODE=$1
-OUTPUT_LOG="../logs/output_gvae_dense_${PROT_ENCODING}_${MODE}.log"
-ERROR_LOG="../logs/error_gvae_dense_${PROT_ENCODING}_${MODE}.log"
+OUTPUT_LOG="../result_logs/output_gvae_dense_${PROT_ENCODING}_${MODE}.log"
+ERROR_LOG="../result_logs/error_gvae_dense_${PROT_ENCODING}_${MODE}.log"
 
 # Run the Python script with the specified mode, redirecting stdout and stderr
-python ../run_gvae_dense_cnn.py --mode $MODE > $OUTPUT_LOG 2> $ERROR_LOG
+python ../src/run_gvae_dense_cnn.py --mode $MODE > $OUTPUT_LOG 2> $ERROR_LOG

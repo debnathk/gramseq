@@ -1,5 +1,5 @@
 import utils
-from DeepPurpose import dataset
+# from DeepPurpose import dataset
 import pandas as pd
 import numpy as np
 '''
@@ -159,28 +159,73 @@ def process_l100(smiles):
 '''
     
 if __name__ == "__main__":
-    # Preprocess Davis dataset
-    X_drugs, X_targets, y = dataset.load_process_DAVIS()
-    print('Drug 1: ' + X_drugs[0])
-    print('Target 1: ' + X_targets[0])
-    print('Score 1: ' + str(y[0]))
 
-    # Initialize the size of subset
-    frac = 100
+    landmark_genes = pd.read_csv('../data/landmark_genes.csv', header=None)
+        # Load l1000 compound info 
+    df_comp_info = pd.read_csv('../data/compoundinfo_beta.csv')
 
-    # Convert drugs to series object
-    X_drugs = pd.Series(X_drugs[:frac])
+    fpath = '../data/'
+    df_l1000 = pd.read_csv(fpath + 'l1000_cp_10uM_all.csv')
+    # print(df_l1000.head())
+    # print(df_l1000.shape)
 
-    # Generate l1000 data for drugs
-    G = pd.Series(X_drugs.unique()).apply(utils.standardize_smiles).apply(utils.process_l1000)
-    G_dict = dict(zip(X_drugs.unique(), G))
-    df_genes = [G_dict[i] for i in X_drugs]
-    vector_genes = np.array(df_genes)
-    # Save the results in a file
-    with open('/home/debnathk/phd/projects/gramseq/src/vector_genes.txt', 'w') as file:
-        file.write(str(vector_genes))
-    # vector_genes = utils.process_l1000(X_drugs[:10])
-    print(vector_genes)
-    print(f'Vector encoding of gene expressions corresponding to drugs: {vector_genes.shape}')
+    # Count unique drugs with 10 uM concentration
+    comp_list_10uM = []
+
+    for i in range(len(df_l1000)):
+        comp = df_l1000['0'][i].split()[0].split('_')[-2]
+        comp_list_10uM.append(comp)
+
+    # print(f'\nNo of unique perturbagens in L1000 dataset with 10 uM concentration: {len(set(comp_list_10uM))}\n')
+
+    # Extract up genes
+    df_up = df_l1000[df_l1000['0'].str.contains('up')]
+    # print(df_l1000_up.head())
+
+    # Clean the drug names in the replicates - up
+    df_up['0'] = df_up['0'].apply(utils.extract_drug_name)
+    # print(df_l1000_up.head())
+
+    # Extract down genes
+    df_down = df_l1000[df_l1000['0'].str.contains('down')]
+    # print(df_l1000_down.head())
+
+    # Clean the drug names in the replicates - down
+    df_down['0'] = df_down['0'].apply(utils.extract_drug_name)
+
+        # Save cmap name and corresponding canonical smiles as dictionary
+    # dict_smiles = {}
+    drug_list = []
+
+    for drug, cmap in zip(df_down['0'], df_comp_info['cmap_name']):
+        if drug==cmap:
+            drug_list.append(drug)
+
+    smiles = ['CCNC(=O)CCC(N)C(O)=O', 'NC(CCCNC(N)=O)C(O)=O', 'CCCN(CCC)C1CCc2ccc(O)cc2C1']
+    data_reg_list = []
+    for drug in drug_list[:5]:
+        drug_count = 0
+        df_reg = landmark_genes
+        df_reg['up'] = [0] * 978
+        df_reg['down'] = [0] * 978
+        for drug_name in df_down['0']:
+            if drug_name == drug:
+                drug_count += 1
+        filtered_up = df_up[df_up['0'] == drug]
+        filtered_down = df_down[df_down['0'] == drug]
+        array_up = filtered_up.iloc[:, 1:].values
+        array_up = array_up.flatten()
+        array_down = filtered_down.iloc[:, 1:].values
+        array_down = array_down.flatten()
+        for item in array_up:
+            df_reg.loc[df_reg[0] == item, 'up'] += 1
+        for item in array_down:
+            df_reg.loc[df_reg[0] == item, 'down'] += 1
+        df_reg = df_reg.iloc[:, 1:] / drug_count
+        df_reg = df_reg.values
+        data_reg_list.append(df_reg)
+
+    data = np.stack(data_reg_list)
+    print(data.shape)
 
 

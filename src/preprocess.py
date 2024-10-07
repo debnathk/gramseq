@@ -35,7 +35,6 @@ genes_df = pd.DataFrame(df_l1000['genes'].to_list(), columns=[f'gene_{i+1}' for 
 df_l1000 = pd.concat([df_l1000.drop(columns=['genes']), genes_df], axis=1)
 
 # Filter instances with concentrations 10 uM
-print('Filtering instances with perturbagen concentration = 10 uM')
 df_l1000 = df_l1000.loc[df_l1000['pert_name'].str.contains('10uM')]
 
 # Save as csv
@@ -76,8 +75,8 @@ print(f'No of unique perturbagens in L1000 dataset: {len(df_up["pert_name"].uniq
 
 # Filter bindingdb drugs present in l1000 data
 selected_names = []
-for name in X_names[:500]:
-    for pert in df_up['pert_name'][:500]: 
+for name in X_names:
+    for pert in df_up['pert_name']: 
         if pert in name:
             selected_names.append(pert)
 
@@ -91,7 +90,7 @@ print(f'No of targets in filtered interactions in the BindingDB dataset: {len(se
 print('Load landmark genes...')
 landmark_genes = pd.read_csv(PATH + 'data/landmark_genes.csv', header=None)
 
-data_reg_list = []
+'''data_reg_list = []
 for drug in selected_names:
     drug_count = 0
     df_reg = landmark_genes
@@ -115,6 +114,6 @@ for drug in selected_names:
     data_reg_list.append(df_reg)
 
 data = np.stack(data_reg_list)
-print(f'Shape of vectors created: {data.shape}')
+print(f'Shape of vectors created: {data.shape}')'''
 
 print('Finish!')

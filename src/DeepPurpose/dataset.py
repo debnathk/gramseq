@@ -220,8 +220,8 @@ def process_BindingDB(path = None, df = None, y = 'Kd', binary = False, \
 							'mean' for using the mean affinity of all duplicate instances
 							None to do nothing
 	"""	
-	# if path is not None and not os.path.exists(path):
-	# 	os.makedirs(path)
+	if path is not None and not os.path.exists(path):
+		os.makedirs(path)
 
 	if df is not None:
 		print('Loading Dataset from the pandas input...')

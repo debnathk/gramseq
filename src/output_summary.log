@@ -1,0 +1,32 @@
+Date
+Thu Aug  8 12:12:14 PM EDT 2024
+
+-------------------------------Dataset Summary - BindingDB----------------------------
+
+Loading Dataset from path...
+Beginning Processing...
+There are 91751 drug target pairs.
+Default set to logspace (nM -> p) for easier regression
+No of unique drugs: 22381
+No of unique proteins: 1860
+Total interactions: 91751
+
+-------------------------------Dataset Summary - Davis----------------------------
+
+Beginning Processing...
+Beginning to extract zip file...
+Default set to logspace (nM -> p) for easier regression
+Done!
+No of unique drugs: 68
+No of unique proteins: 379
+Total interactions: 30056
+
+-------------------------------Dataset Summary - KIBA----------------------------
+
+Beginning Processing...
+Beginning to extract zip file...
+Done!
+No of unique drugs: 2068
+No of unique proteins: 229
+Total interactions: 118254
+Elapsed time: 110 seconds
