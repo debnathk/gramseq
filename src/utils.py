@@ -516,3 +516,155 @@ def c_index(y_true, y_pred):
     c_index = concordant_pairs / permissible_pairs if permissible_pairs > 0 else 0
     
     return c_index
+
+def process_l1000(s):
+    # Load l1000 dataset
+    fpath = '../data/'
+    df_l1000 = pd.read_csv(fpath + 'l1000_cp_10uM_all.csv')
+    # print(df_l1000.head())
+    # print(df_l1000.shape)
+
+    # Count unique drugs with 10 uM concentration
+    comp_list_10uM = []
+
+    for i in range(len(df_l1000)):
+        comp = df_l1000['0'][i].split()[0].split('_')[-2]
+        comp_list_10uM.append(comp)
+
+    # print(f'\nNo of unique perturbagens in L1000 dataset with 10 uM concentration: {len(set(comp_list_10uM))}\n')
+
+    # Extract up genes
+    df_l1000_up = df_l1000[df_l1000['0'].str.contains('up')]
+    # print(df_l1000_up.head())
+
+    # Clean the drug names in the replicates - up
+    df_l1000_up['0'] = df_l1000_up['0'].apply(extract_drug_name)
+    # print(df_l1000_up.head())
+
+    # Extract down genes
+    df_l1000_down = df_l1000[df_l1000['0'].str.contains('down')]
+    # print(df_l1000_down.head())
+
+    # Clean the drug names in the replicates - down
+    df_l1000_down['0'] = df_l1000_down['0'].apply(extract_drug_name)
+    # print(df_l1000_down.head())
+
+    # Create dataset
+
+    # Read the landmark_genes CSV file
+    landmark_genes = pd.read_csv(fpath + "landmark_genes.csv", header=None)
+
+    # Prepare a list to store the results
+    data_reg_list = []
+
+    # Precompute the count of occurrences for each drug in the down-regulated dataset
+    drug_counts = df_l1000_up['0'].value_counts()
+
+    # Iterate over each unique drug name and save the idx in dict
+    dict_drugs = {}
+    for drug, idx in zip(list(set(df_l1000_up['0'])), np.arange(len(set(df_l1000_up['0'])))):
+        # Initialize the DataFrame for this drug with zeros for 'up' and 'down' counts
+        if drug not in dict_drugs.keys():
+            dict_drugs[drug] = int(idx)
+        df_reg = landmark_genes.copy()
+        df_reg['up'] = 0
+        df_reg['down'] = 0
+
+        # Filter the gene expression data for the current drug
+        filtered_up = df_l1000_up[df_l1000_up['0'] == drug]
+        filtered_down = df_l1000_down[df_l1000_down['0'] == drug]
+
+        # Flatten the arrays of up-regulated and down-regulated genes
+        array_up = filtered_up.iloc[:, 1:].to_numpy().flatten()
+        array_down = filtered_down.iloc[:, 1:].to_numpy().flatten()
+
+        # Count the occurrences of each gene in the 'up' and 'down' arrays
+        up_counts = pd.Series(array_up).value_counts()
+        down_counts = pd.Series(array_down).value_counts()
+
+        # Update the 'up' and 'down' columns in the df_reg DataFrame
+        df_reg['up'] = df_reg[0].map(up_counts).fillna(0)
+        df_reg['down'] = df_reg[0].map(down_counts).fillna(0)
+
+        # Normalize the counts by the total number of occurrences of the drug
+        drug_count = drug_counts.get(drug, 1)  # Default to 1 to avoid division by zero
+        df_reg.iloc[:, 1:] = df_reg.iloc[:, 1:] / drug_count
+
+        # Convert the DataFrame to a numpy array and add to the results list
+        data_reg_list.append(df_reg.iloc[:, 1:].to_numpy())
+
+    # Save the unique drugs as dictionary
+    # with open('../data/l1000_drugs.txt', 'w') as f:
+    #     json.dump(dict_drugs, f)
+
+    data = np.stack(data_reg_list)
+    # print(data.shape)
+
+    # Load l1000 compound info 
+    df_comp_info = pd.read_csv('/home/debnathk/phd/projects/gramseq/data/compoundinfo_beta.csv')
+    # print(df_comp_info.head())
+    # print(df_comp_info.shape)
+
+    # Save cmap name and corresponding canonical smiles as dictionary
+    dict_smiles = {}
+
+    for smiles, cmap in zip(df_comp_info['canonical_smiles'], df_comp_info['cmap_name']):
+        if cmap not in dict_smiles.values():
+            dict_smiles[standardize_smiles(smiles)] = cmap
+
+    print(dict_smiles)
+
+    # with open('../data/l1000_smiles.txt', 'w') as f:
+    #     json.dump(dict_smiles, f)
+
+
+    # Test - extract the index of drugs from smiles
+    # Read the smiles file
+    # with open('../data/l1000_smiles.txt', 'r') as f:
+    #     dict_smiles = json.load(f)
+    # f.close()
+
+    # Read the idx file
+    # with open('../data/l1000_drugs.txt', 'r') as f:
+    #     dict_drugs = json.load(f)
+    # f.close()
+
+    # smiles_list = ['CCNC(=O)CCC(N)C(O)=O', 'NC(CCCNC(N)=O)C(O)=O', 'CCCN(CCC)C1CCc2ccc(O)cc2C1', 'C#Cc1cccc(Nc2ncnc3cc(OCCOC)c(OCCOC)cc23)c1']
+
+    # collected_data = []
+
+    try:
+        cmap_s = dict_smiles[s]
+        idx_s = dict_drugs[cmap_s]
+        result = data[idx_s]
+    except KeyError:
+        print(f'SMILES {smiles} not present in L1000 dataset.')
+        
+        # mol = Chem.MolFromSmiles(s)
+        # result = data[0]
+        # fpgen = AllChem.GetRDKitFPGenerator()
+        # query_fp = fpgen.GetFingerprint(mol)
+        # similarities = {}
+        # for l1000_smiles in list(dict_smiles.keys()):
+        #     mol_p = Chem.MolFromSmiles(l1000_smiles)
+        #     l1000_fp = fpgen.GetFingerprint(mol_p)
+        #     similarity = DataStructs.TanimotoSimilarity(query_fp, l1000_fp)
+        #     similarities[similarity] = l1000_smiles
+        
+        # best_sim = max(similarities.keys())
+        # sim_smiles = similarities[best_sim]
+        
+        # print(f'Best similarity: {best_sim} with SMILES: {sim_smiles}')
+        # try:
+        #     sim_cmap = dict_smiles[sim_smiles]
+        #     sim_idx = dict_drugs[sim_cmap]
+        #     sim_data = data[sim_idx] * best_sim
+        #     idx_s = sim_idx
+        # except KeyError:
+        #     print(f'Invalid CMAP: {sim_cmap}')
+        #     return None
+
+    # else:
+    #     sim_data = data[idx_s]
+        
+    return result

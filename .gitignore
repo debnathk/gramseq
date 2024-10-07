@@ -16,7 +16,6 @@ __pycache__
 *.json
 .venv
 .vscode
-*.log
 model_weights
 others
 figures

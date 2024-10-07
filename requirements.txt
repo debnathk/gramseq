@@ -1,3 +1,4 @@
+tensorflow<2.11
 DeepPurpose
 descriptastorus @ git+https://github.com/bp-kelley/descriptastorus@9b133e2c91bb6a67df53db4cba992776db219ab7
 rdkit

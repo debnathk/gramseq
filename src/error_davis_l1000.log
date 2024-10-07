@@ -1,0 +1,43 @@
+2024-08-20 20:16:17.940070: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-08-20 20:16:18.055967: I tensorflow/core/util/util.cc:169] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2024-08-20 20:16:18.084485: E tensorflow/stream_executor/cuda/cuda_blas.cc:2981] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2024-08-20 20:16:18.557839: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer.so.7'; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/cuda-12.4/lib64:/usr/lib/jvm/java-11-amazon-corretto/lib:/usr/lib/gcc/x86_64-linux-gnu/11
+2024-08-20 20:16:18.557937: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer_plugin.so.7'; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/cuda-12.4/lib64:/usr/lib/jvm/java-11-amazon-corretto/lib:/usr/lib/gcc/x86_64-linux-gnu/11
+2024-08-20 20:16:18.557947: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+2024-08-20 20:16:19.215876: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-08-20 20:16:19.433103: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1616] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 38487 MB memory:  -> device: 0, name: NVIDIA A100-PCIE-40GB, pci bus id: 0000:1b:00.0, compute capability: 8.0
+[20:28:30] SMILES Parse Error: syntax error while parsing: restricted
+[20:28:30] SMILES Parse Error: Failed parsing SMILES 'restricted' for input: 'restricted'
+[20:28:30] SMILES Parse Error: syntax error while parsing: restricted
+[20:28:30] SMILES Parse Error: Failed parsing SMILES 'restricted' for input: 'restricted'
+[20:28:39] SMILES Parse Error: syntax error while parsing: restricted
+[20:28:39] SMILES Parse Error: Failed parsing SMILES 'restricted' for input: 'restricted'
+[20:28:39] SMILES Parse Error: syntax error while parsing: restricted
+[20:28:39] SMILES Parse Error: Failed parsing SMILES 'restricted' for input: 'restricted'
+[20:40:58] SMILES Parse Error: syntax error while parsing: restricted
+[20:40:58] SMILES Parse Error: Failed parsing SMILES 'restricted' for input: 'restricted'
+[20:40:58] SMILES Parse Error: syntax error while parsing: restricted
+[20:40:58] SMILES Parse Error: Failed parsing SMILES 'restricted' for input: 'restricted'
+[20:41:07] SMILES Parse Error: syntax error while parsing: restricted
+[20:41:07] SMILES Parse Error: Failed parsing SMILES 'restricted' for input: 'restricted'
+[20:41:07] SMILES Parse Error: syntax error while parsing: restricted
+[20:41:07] SMILES Parse Error: Failed parsing SMILES 'restricted' for input: 'restricted'
+Traceback (most recent call last):
+  File "/home/debnathk/phd/projects/gramseq/src/run_davis_l1000.py", line 72, in <module>
+    G = pd.Series(X_drugs_train.unique()).apply(utils.process_l1000)
+  File "/home/debnathk/.local/lib/python3.10/site-packages/pandas/core/series.py", line 4924, in apply
+    ).apply()
+  File "/home/debnathk/.local/lib/python3.10/site-packages/pandas/core/apply.py", line 1427, in apply
+    return self.apply_standard()
+  File "/home/debnathk/.local/lib/python3.10/site-packages/pandas/core/apply.py", line 1507, in apply_standard
+    mapped = obj._map_values(
+  File "/home/debnathk/.local/lib/python3.10/site-packages/pandas/core/base.py", line 921, in _map_values
+    return algorithms.map_array(arr, mapper, na_action=na_action, convert=convert)
+  File "/home/debnathk/.local/lib/python3.10/site-packages/pandas/core/algorithms.py", line 1743, in map_array
+    return lib.map_infer(values, mapper, convert=convert)
+  File "lib.pyx", line 2972, in pandas._libs.lib.map_infer
+  File "/home/debnathk/phd/projects/gramseq/src/utils.py", line 631, in process_l1000
+    cmap_s = dict_smiles[s]
+KeyError: 'CN(C)CC=CC(=O)Nc1cc2c(Nc3ccc(F)c(Cl)c3)ncnc2cc1OC1CCOC1'
