@@ -19,7 +19,7 @@ conda env create -f environment.yml
 conda activate gramseq
 ```
 
-## Run:
+## Training
 To integrate RNA-seq data with the BindingDB dataset for model training, the following code can be used:
 ```
 python src/train.py --dataset bindingdb\
