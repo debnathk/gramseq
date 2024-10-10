@@ -19,6 +19,16 @@ conda env create -f environment.yml
 conda activate gramseq
 ```
 
+## Data Preparation
+Preparing the RNA-Seq data from L1000 project:
+```
+python src/prepare_l1000.py
+```
+Pre-processing benchmark datasets:
+```
+
+```
+
 ## Training
 To integrate RNA-seq data with the BindingDB dataset for model training, the following code can be used:
 ```
@@ -29,5 +39,3 @@ python src/train.py --dataset bindingdb\
                     --folds 5 > ./result_logs/output_bindingdb_rnaseq_cnn.log 2> error_bindingdb_rnaseq_cnn.log
 ```
 Similarly, the model can be trained on the Davis and KIBA datasets by replacing the `bindingdb` dataset parameter with `davis` or `kiba`, respectively.
-
-
