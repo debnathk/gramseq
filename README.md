@@ -28,6 +28,6 @@ python src/train.py --dataset bindingdb\
                     --epochs 500\
                     --folds 5 > ./result_logs/output_bindingdb_rnaseq_cnn.log 2> error_bindingdb_rnaseq_cnn.log
 ```
-Similarly, the model can be trained on Davis and KIBA dataset.
+Similarly, the model can be trained on the Davis and KIBA datasets by replacing the `bindingdb` dataset parameter with `davis` or `kiba`, respectively.
 
 
