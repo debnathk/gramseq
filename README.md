@@ -19,18 +19,17 @@ conda env create -f environment.yml
 conda activate gramseq
 ```
 
-## Dataset summary: 
-### L1000 RNA-Seq dataset
-```
-No of unique perturbagens in L1000 dataset: 33587
-No of instances in L1000 Chemical Perturbation RNA-Seq dataset with 10 uM concentration: 440842
-```
+## Download Datsets:
 
-### BindingDB dataset (Preprocessed)
+## Run:
+To integrate RNA-seq data with the BindingDB dataset for model training, the following code can be used:
 ```
-No of unique drugs: 22381
-No of unique targets: 1860
-No of total interactions: 91751
+python src/train.py --dataset bindingdb\
+                    --protenc CNN\
+                    --rnaseq\
+                    --epochs 500\
+                    --folds 5 > ./result_logs/output_bindingdb_rnaseq_cnn.log 2> error_bindingdb_rnaseq_cnn.log
 ```
+Similarly, the model can be trained on Davis and KIBA dataset.
 
 
