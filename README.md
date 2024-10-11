@@ -24,10 +24,6 @@ Preparing the RNA-Seq data from L1000 project:
 ```
 python src/prepare_l1000.py
 ```
-Pre-processing benchmark datasets:
-```
-
-```
 
 ## Training
 To integrate RNA-seq data with the BindingDB dataset for model training, the following code can be used:
