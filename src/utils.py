@@ -2,6 +2,7 @@ import numpy as np
 from rdkit.Chem import MolToSmiles, MolFromSmiles
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem
+from sklearn.preprocessing import OneHotEncoder
 from functools import reduce
 import nltk
 import zinc_grammar
@@ -147,7 +148,6 @@ def smiles2onehot(s):
 amino_char = ['?', 'A', 'C', 'B', 'E', 'D', 'G', 'F', 'I', 'H', 'K', 'M', 'L', 'O',
        'N', 'Q', 'P', 'S', 'R', 'U', 'T', 'W', 'V', 'Y', 'X', 'Z']
 
-from sklearn.preprocessing import OneHotEncoder
 enc_protein = OneHotEncoder().fit(np.array(amino_char).reshape(-1, 1))
 
 MAX_SEQ_PROTEIN = 1000
@@ -185,9 +185,6 @@ def convert_y_unit(y, from_, to_):
 		return y[0]
 	return y
 
-import numpy as np
-
-import numpy as np
 
 def train_val_test_split(X1=None, X2=None, X3=None, y=None, train_size=0.7, val_size=0.15, test_size=0.15, random_state=None):
 
