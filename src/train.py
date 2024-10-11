@@ -1,7 +1,6 @@
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID" 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-from DeepPurpose import dataset
 import warnings
 import pandas as pd
 import numpy as np
@@ -13,7 +12,6 @@ from keras.callbacks import EarlyStopping
 import argparse
 import matplotlib.pyplot as plt
 from prettytable import PrettyTable
-import logging
 import time
 from keras.callbacks import ModelCheckpoint
 warnings.filterwarnings("ignore")
@@ -38,10 +36,13 @@ if args.dataset == 'bindingdb':
         X_smiles, X_targets, y = df['smiles'], df['target sequence'], df['affinity']
     else:
         # Preprocess bindingdb dataset
-        X_names, X_smiles, X_targets, y = dataset.process_BindingDB(path= PATH + 'data/bindingdb/BindingDB_All_202407.tsv', y='Kd', binary = False, \
-                            convert_to_log = True, threshold = 30)
-        df = pd.DataFrame({'name': X_names, 'smiles': X_smiles, 'target sequence': X_targets, 'affinity': y})
-        df.to_csv(PATH + 'data/bindingdb/preprocessed/bindingdb.csv', index=False)
+        # X_names, X_smiles, X_targets, y = dataset.process_BindingDB(path= PATH + 'data/bindingdb/BindingDB_All_202407.tsv', y='Kd', binary = False, \
+        #                     convert_to_log = True, threshold = 30)
+        # df = pd.DataFrame({'name': X_names, 'smiles': X_smiles, 'target sequence': X_targets, 'affinity': y})
+        # df.to_csv(PATH + 'data/bindingdb/preprocessed/bindingdb.csv', index=False)
+        # Read Preprocessed davis dataset
+        df = pd.read_csv(PATH + 'data/bindingdb/preprocessed/bindingdb.csv')
+        X_smiles, X_targets, y = df['smiles'], df['target sequence'], df['affinity']
     print('Dataset summary: BindingDB dataset')
     print(f'No of unique drugs: {len(set(X_smiles))}')
     print(f'No of unique targets: {len(set(X_targets))}')
