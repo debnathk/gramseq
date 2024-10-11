@@ -4,6 +4,7 @@ DeepPurpose
 *.h5
 *.npy
 __pycache__
+.ipynb_checkpoints
 *.png
 *.out
 *.sdf
