@@ -50,7 +50,7 @@ print('Saving mapped perturbagen smiles as data/l1000/l1000_smiles_dict.txt')
 with open(PATH + 'data/l1000/l1000_smiles_dict.txt', 'w') as file:
     json.dump(dict_smiles, file, indent=4)
 file.close()
-'''
+
 # Save as csv
 print('Saving L1000 dataset data/l1000/l1000_cp.csv')
 df_l1000.to_csv(PATH + 'data/l1000/l1000_cp.csv', index=False)
@@ -107,6 +107,5 @@ print('Saving the vectors as data/l1000/l1000_vectors.pkl')
 with open(PATH + 'data/l1000/l1000_vectors.pkl', 'wb') as file:
     pickle.dump(data, file)
 file.close()
-'''
 
 print('Completed!')

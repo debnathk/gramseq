@@ -24,28 +24,58 @@ PATH  = '/home/debnathk/gramseq/'
 parser = argparse.ArgumentParser(description='Add commandline arguments')
 parser.add_argument('--dataset', type=str, choices=['bindingdb', 'davis', 'kiba'], required=True)
 parser.add_argument('--rnaseq', action='store_true', help="Enable RNA-seq processing.")
+parser.add_argument('--processed', action='store_true', help='Select processed dataset')
 parser.add_argument('--protenc', type=str, choices=['CNN', 'RNN'], required=True)
 parser.add_argument('--epochs', type=int, default=500, required=False)
-parser.add_argument('--bs', type=int, choices=[128, 256, 512], default=256, required=False)
+parser.add_argument('--bs', type=int, default=256, required=False)
 parser.add_argument('--folds', type=int, default=5, required=False)
 
 # Parse arguments
 args = parser.parse_args()
+if args.dataset == 'bindingdb':
+    if args.processed:
+        df = pd.read_csv(PATH + 'data/l1000/l1000_bindingdb.csv')
+        X_smiles, X_targets, y = df['smiles'], df['target sequence'], df['affinity']
+    else:
+        # Preprocess bindingdb dataset
+        X_names, X_smiles, X_targets, y = dataset.process_BindingDB(path= PATH + 'data/bindingdb/BindingDB_All_202407.tsv', y='Kd', binary = False, \
+                            convert_to_log = True, threshold = 30)
+        df = pd.DataFrame({'name': X_names, 'smiles': X_smiles, 'target sequence': X_targets, 'affinity': y})
+        df.to_csv(PATH + 'data/bindingdb/preprocessed/bindingdb.csv', index=False)
+    print('Dataset summary: BindingDB dataset')
+    print(f'No of unique drugs: {len(set(X_smiles))}')
+    print(f'No of unique targets: {len(set(X_targets))}')
+    print(f'No of total interactions: {len(X_smiles)}')
 
-# Preprocess bindingdb dataset
-X_names, X_smiles, X_targets, y = dataset.process_BindingDB(path= PATH + 'data/BindingDB/BindingDB_All_202407.tsv', y='Kd', binary = False, \
-					convert_to_log = True, threshold = 30)
-df_bindingdb = pd.DataFrame({'name': X_names, 'smiles': X_smiles, 'target sequence': X_targets, 'affinity': y})
-df_bindingdb.to_csv(PATH + 'data/BindingDB/preprocessed/bindingdb.csv', index=False)
-print('Dataset summary: BindingDB dataset (Preprocessed)')
-print(f'No of unique drugs: {len(set(X_smiles))}')
-print(f'No of unique targets: {len(set(X_targets))}')
-print(f'No of total interactions: {len(X_smiles)}')
+elif args.dataset == 'davis':
+    if args.processed:
+        df = pd.read_csv(PATH + 'data/l1000/l1000_davis.csv')
+        X_smiles, X_targets, y = df['smiles'], df['target sequence'], df['affinity']
+    else:
+        # Preprocess davis dataset
+        df = pd.read_csv(PATH + 'data/davis/preprocessed/davis.csv')
+        X_smiles, X_targets, y = df['smiles'], df['target sequence'], df['affinity']
+    print('Dataset summary: Davis dataset')
+    print(f'No of unique drugs: {len(set(X_smiles))}')
+    print(f'No of unique targets: {len(set(X_targets))}')
+    print(f'No of total interactions: {len(X_smiles)}')
+
+elif args.dataset == 'kiba':
+    if args.processed:
+        df = pd.read_csv(PATH + 'data/l1000/l1000_kiba.csv')
+        X_smiles, X_targets, y = df['smiles'], df['target sequence'], df['affinity']
+    else:
+        df = pd.read_csv(PATH + 'data/kiba/preprocessed/kiba.csv')
+        X_smiles, X_targets, y = df['smiles'], df['target sequence'], df['affinity']
+    print('Dataset summary: KIBA dataset')
+    print(f'No of unique drugs: {len(set(X_smiles))}')
+    print(f'No of unique targets: {len(set(X_targets))}')
+    print(f'No of total interactions: {len(X_smiles)}')
 
 if args.rnaseq:
     # Calculate L1000
-    df_l1000_bindingdb, rna_seq_vectors = utils.process_l1000(path=PATH, dataset=args.dataset)
-    X_smiles, X_targets, y = df_l1000_bindingdb['smiles'], df_l1000_bindingdb['target sequence'], df_l1000_bindingdb['affinity']
+    df_l1000, rna_seq_vectors = utils.process_l1000(path=PATH, dataset=args.dataset)
+    X_smiles, X_targets, y = df_l1000['smiles'], df_l1000['target sequence'], df_l1000['affinity']
 
     # Convert drugs to series object
     X_smiles = pd.Series(X_smiles)
@@ -86,10 +116,6 @@ if args.rnaseq:
     print(f'Train, Val, Test shapes - protein: {protein_train.shape, protein_val.shape, protein_test.shape}')
     print(f'Train, Val, Test shapes - y: {y_train.shape, y_val.shape, y_test.shape}')
 else:
-    # Calculate L1000
-    df_l1000_bindingdb, _ = utils.process_l1000(path=PATH, dataset=args.dataset)
-    X_smiles, X_targets, y = df_l1000_bindingdb['smiles'], df_l1000_bindingdb['target sequence'], df_l1000_bindingdb['affinity']
-
     # Convert drugs to series object
     X_smiles = pd.Series(X_smiles)
     # One-hot encoding of drug SMILES
