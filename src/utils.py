@@ -1,7 +1,6 @@
 import numpy as np
 from rdkit.Chem import MolToSmiles, MolFromSmiles
 from rdkit import Chem, DataStructs
-from rdkit.Chem import AllChem
 from sklearn.preprocessing import OneHotEncoder
 from functools import reduce
 import nltk
