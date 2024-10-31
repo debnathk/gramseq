@@ -34,4 +34,4 @@ python src/train.py --dataset bindingdb\
                     --epochs 500\
                     --folds 5 > ./result_logs/output_bindingdb_rnaseq_cnn.log 2> error_bindingdb_rnaseq_cnn.log
 ```
-Similarly, the model can be trained on the Davis and KIBA datasets by replacing the `bindingdb` dataset parameter with `davis` or `kiba`, respectively.
+Similarly, the model can be trained on the Davis and KIBA datasets by replacing the `bindingdb` with `davis` or `kiba` for the `--dataset` argument, respectively. To use RNN as the protein encoder, `CNN` can be replaced with `RNN` and passed into the `--protenc` argument.
